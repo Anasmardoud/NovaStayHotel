@@ -1,0 +1,213 @@
+﻿<Window x:Class="NovaStayHotel.Views.AddEditRoomWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:converters="clr-namespace:NovaStayHotel.Converters"
+        xmlns:local="clr-namespace:NovaStayHotel"
+        Title="{Binding WindowTitle}" 
+        Height="600" Width="700"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#F8F9FA">
+
+    <Window.Resources>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+            <Setter Property="Foreground" Value="#333"/>
+        </Style>
+
+        <Style x:Key="InputStyle" TargetType="Control">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="telerik:RadNumericUpDown" BasedOn="{StaticResource InputStyle}"/>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource InputStyle}"/>
+        <Style TargetType="DatePicker" BasedOn="{StaticResource InputStyle}"/>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2E86AB" CornerRadius="5" Padding="15">
+            <StackPanel>
+                <TextBlock Text="{Binding WindowTitle}" 
+                           FontSize="18" FontWeight="Bold" 
+                           Foreground="White"/>
+                <TextBlock Text="{Binding WindowSubtitle}" 
+                           FontSize="12" 
+                           Foreground="#B0E0E6" 
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Form Content -->
+        <ScrollViewer Grid.Row="1" Margin="0,20,0,20" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="BASIC INFORMATION" 
+                               FontSize="12" FontWeight="Bold" 
+                               Foreground="#888" Margin="0,0,0,10"/>
+
+                    <!-- Room Number -->
+                    <TextBlock Text="Room Number *" Style="{StaticResource LabelStyle}"/>
+                    <telerik:RadNumericUpDown Value="{Binding Number, Mode=TwoWay}"/>
+
+                    <!-- Floor Number -->
+                    <TextBlock Text="Floor Number *" Style="{StaticResource LabelStyle}"/>
+                    <telerik:RadNumericUpDown Value="{Binding FloorNumber, Mode=TwoWay}"/>
+
+                    <!-- Room Type -->
+                    <TextBlock Text="Room Type *" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding RoomTypes}"
+                              SelectedItem="{Binding Type, Mode=TwoWay}"/>
+
+                    <!-- Room Status -->
+                    <TextBlock Text="Room Status *" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding RoomStatuses}"
+                              SelectedItem="{Binding Status, Mode=TwoWay}"/>
+
+                    <!-- Has Balcony -->
+                    <CheckBox Content="Has Balcony" 
+                              IsChecked="{Binding HasBalcony, Mode=TwoWay}"
+                              Margin="0,15,0,0"/>
+                </StackPanel>
+
+                <!-- Right Column -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="PRICING and DETAILS"
+                               FontSize="12" FontWeight="Bold" 
+                               Foreground="#888" Margin="0,0,0,10"/>
+
+                    <!-- Price Per Night -->
+                    <TextBlock Text="Price Per Night (USD) *" Style="{StaticResource LabelStyle}"/>
+                    <telerik:RadNumericUpDown Value="{Binding PricePerNightUsd, Mode=TwoWay}" 
+                                              NumberDecimalDigits="2"/>
+
+                    <!-- Last Maintained -->
+                    <TextBlock Text="Last Maintained Date" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding LastMaintainedAt, Mode=TwoWay}"
+                                Height="40"/>
+
+                    <!-- Description -->
+                    <TextBlock Text="Description" Style="{StaticResource LabelStyle}"/>
+                    <TextBox Text="{Binding Description, Mode=TwoWay}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Height="80"
+                             VerticalScrollBarVisibility="Auto"
+                             Padding="8"
+                             BorderBrush="#DDD"
+                             BorderThickness="1"/>
+
+                    <!-- Validation Summary -->
+                    <Border Background="#FFF3CD" 
+                            BorderBrush="#FFEAA7" 
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Padding="10"
+                            Margin="0,15,0,0"
+                            Visibility="{Binding HasValidationErrors, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="⚠️ Please fix the following errors:" 
+                                       FontWeight="Bold" 
+                                       Foreground="#856404" 
+                                       Margin="0,0,0,5"/>
+                            <ItemsControl ItemsSource="{Binding ValidationErrors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" 
+                                                   Foreground="#856404" 
+                                                   Margin="0,2"
+                                                   FontSize="11"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Action Buttons -->
+        <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="0,15,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Required Fields Note -->
+                <TextBlock Grid.Column="0" 
+                           Text="* Required fields" 
+                           FontSize="11" 
+                           Foreground="#888" 
+                           VerticalAlignment="Center"/>
+
+                <!-- Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Cancel" 
+                            Command="{Binding CancelCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Width="80" Height="35"
+                            Background="#6C757D" 
+                            Foreground="White"
+                            BorderThickness="0"
+                            Margin="0,0,10,0"
+                            Cursor="Hand"/>
+
+                    <Button Content="{Binding SaveButtonText}" 
+                            Command="{Binding SaveCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Width="80" Height="35"
+                            Background="#28A745" 
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            IsEnabled="{Binding CanSave}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#218838"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#CCC"/>
+                                        <Setter Property="Cursor" Value="Arrow"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Loading Overlay -->
+        <Border Grid.Row="0" Grid.RowSpan="3" 
+                Background="#80000000"
+                Visibility="{Binding IsSaving, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <telerik:RadBusyIndicator IsBusy="{Binding IsSaving}" 
+                                          Content="{Binding LoadingText}"
+                                          Foreground="White"
+                                          FontSize="16"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

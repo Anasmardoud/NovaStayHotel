@@ -1,0 +1,287 @@
+﻿<Window x:Class="NovaStayHotel.Views.AddEditReservationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:converters="clr-namespace:NovaStayHotel.Converters"
+        xmlns:local="clr-namespace:NovaStayHotel"
+        Title="{Binding WindowTitle}" 
+        Height="700" Width="800"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#F8F9FA">
+
+    <Window.Resources>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="InputStyle" TargetType="Control">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style TargetType="ComboBox" BasedOn="{StaticResource InputStyle}"/>
+        <Style TargetType="DatePicker" BasedOn="{StaticResource InputStyle}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource InputStyle}"/>
+
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#888"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="EstimatedCostStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2E86AB"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+        </Style>
+
+        <Style x:Key="ValidationErrorStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FFF3CD"/>
+            <Setter Property="BorderBrush" Value="#FFEAA7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,15,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2E86AB" CornerRadius="5" Padding="15">
+            <StackPanel>
+                <TextBlock Text="{Binding WindowTitle}" 
+                           FontSize="18" FontWeight="Bold" 
+                           Foreground="White"/>
+                <TextBlock Text="{Binding WindowSubtitle}" 
+                           FontSize="12" 
+                           Foreground="#B0E0E6" 
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Form Content -->
+        <ScrollViewer Grid.Row="1" Margin="0,20,0,20" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="GUEST &amp; ROOM INFORMATION" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <!-- Guest Selection -->
+                    <TextBlock Text="Guest *" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding AvailableGuests}"
+                              SelectedItem="{Binding SelectedGuest, Mode=TwoWay}"
+                              DisplayMemberPath="Name"
+                              Style="{StaticResource InputStyle}"/>
+
+                    <!-- Room Selection -->
+                    <TextBlock Text="Room *" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding AvailableRooms}"
+                              SelectedItem="{Binding SelectedRoom, Mode=TwoWay}"
+                              Style="{StaticResource InputStyle}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Room {0} (Floor {1}) RoomType : {2} ">
+                                            <Binding Path="Number"/>
+                                            <Binding Path="FloorNumber"/>
+                                            <Binding Path="RoomType"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Text="RESERVATION DATES" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <!-- Check-in Date -->
+                    <TextBlock Text="Check-in Date *" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding CheckInBookingDate, Mode=TwoWay, Converter={StaticResource DateOnlyToDateTimeConverter}}"
+                                Style="{StaticResource InputStyle}"/>
+
+                    <!-- Check-out Date -->
+                    <TextBlock Text="Check-out Date *" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding CheckOutBookingDate, Mode=TwoWay, Converter={StaticResource DateOnlyToDateTimeConverter}}"
+                                Style="{StaticResource InputStyle}"/>
+
+                    <!-- Estimated Cost Display -->
+                    <TextBlock Text="{Binding EstimatedCostText}" 
+                               Style="{StaticResource EstimatedCostStyle}"/>
+
+                    <!-- Is Active -->
+                    <CheckBox Content="Active Reservation" 
+                              IsChecked="{Binding IsActive, Mode=TwoWay}"
+                              Margin="0,15,0,0"
+                              FontWeight="Medium"/>
+                </StackPanel>
+
+                <!-- Right Column -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="STATUS &amp; PAYMENT"
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <!-- Reservation Status -->
+                    <TextBlock Text="Status *" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding ReservationStatuses}"
+                              SelectedItem="{Binding Status, Mode=TwoWay}"
+                              Style="{StaticResource InputStyle}"/>
+
+                    <!-- Discount Rate -->
+                    <TextBlock Text="Discount Rate (%)" Style="{StaticResource LabelStyle}"/>
+                    <telerik:RadNumericUpDown Value="{Binding DiscountRate, Mode=TwoWay}" 
+                                              NumberDecimalDigits="2"
+                                              Minimum="0"
+                                              Maximum="100"
+                                              Style="{StaticResource InputStyle}"/>
+
+                    <!-- Payment Information -->
+                    <TextBlock Text="PAYMENT DETAILS" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <!-- Payment Method -->
+                    <TextBlock Text="Payment Method" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding PaymentMethods}"
+                              SelectedItem="{Binding PaymentMethod, Mode=TwoWay}"
+                              Style="{StaticResource InputStyle}"/>
+
+                    <!-- Is Paid -->
+                    <CheckBox Content="Payment Received" 
+                              IsChecked="{Binding IsPaid, Mode=TwoWay}"
+                              Margin="0,15,0,0"
+                              FontWeight="Medium"/>
+
+                    <TextBlock Text="TRACKING DATES" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <!-- Actual Check-in Time -->
+                    <TextBlock Text="Actual Check-in Time" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding CheckedInAt, Mode=TwoWay}"
+                                Style="{StaticResource InputStyle}"/>
+
+                    <!-- Actual Check-out Time -->
+                    <TextBlock Text="Actual Check-out Time" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding CheckedOutAt, Mode=TwoWay}"
+                                Style="{StaticResource InputStyle}"/>
+
+                    <!-- Canceled Time -->
+                    <TextBlock Text="Cancellation Time" Style="{StaticResource LabelStyle}"/>
+                    <DatePicker SelectedDate="{Binding CanceledAt, Mode=TwoWay}"
+                                Style="{StaticResource InputStyle}"/>
+
+                    <!-- Calculated Amounts Display -->
+                    <Border Background="#F8F9FA" BorderBrush="#E9ECEF" BorderThickness="1" 
+                            CornerRadius="5" Padding="10" Margin="0,15,0,0">
+                        <StackPanel>
+                            <TextBlock Text="CALCULATED AMOUNTS" 
+                                       FontWeight="Bold" FontSize="11" 
+                                       Foreground="#6C757D" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding BaseAmountUsd, StringFormat='Base Amount: ${0:F2}'}" 
+                                       FontSize="12" Margin="0,2"/>
+                            <TextBlock Text="{Binding FinalAmountUsd, StringFormat='Final Amount: ${0:F2}'}" 
+                                       FontSize="12" FontWeight="Bold" Margin="0,2"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Validation Summary -->
+                    <Border Style="{StaticResource ValidationErrorStyle}"
+                            Visibility="{Binding HasValidationErrors, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="⚠️ Please fix the following errors:" 
+                                       FontWeight="Bold" 
+                                       Foreground="#856404" 
+                                       Margin="0,0,0,5"/>
+                            <ItemsControl ItemsSource="{Binding ValidationErrors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" 
+                                                   Foreground="#856404" 
+                                                   Margin="0,2"
+                                                   FontSize="11"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Action Buttons -->
+        <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="0,15,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Required Fields Note -->
+                <TextBlock Grid.Column="0" 
+                           Text="* Required fields" 
+                           FontSize="11" 
+                           Foreground="#888" 
+                           VerticalAlignment="Center"/>
+
+                <!-- Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Cancel" 
+                            Command="{Binding CancelCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Width="80" Height="35"
+                            Background="#6C757D" 
+                            Foreground="White"
+                            BorderThickness="0"
+                            Margin="0,0,10,0"
+                            Cursor="Hand"/>
+
+                    <Button Content="{Binding SaveButtonText}" 
+                            Command="{Binding SaveCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Width="80" Height="35"
+                            Background="#28A745" 
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            IsEnabled="{Binding CanSave}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#218838"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#CCC"/>
+                                        <Setter Property="Cursor" Value="Arrow"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,28 @@
+﻿<Window x:Class="NovaStayHotel.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:NovaStayHotel"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:views="clr-namespace:NovaStayHotel.Views"
+        mc:Ignorable="d"
+        Title="NovaStayHotel" Height="450" Width="800">
+    <ContentControl Content="{Binding CurrentViewModel}">
+        <ContentControl.Resources>
+            <DataTemplate DataType="{x:Type local:HomeViewModel}">
+                <views:HomeView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:ReservationListViewModel}">
+                <views:ReservationListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:GuestListViewModel}">
+                <views:GuestListView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:RoomListViewModel}">
+                <views:RoomListView />
+            </DataTemplate>
+        </ContentControl.Resources>
+    </ContentControl>
+</Window>
