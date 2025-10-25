@@ -118,12 +118,6 @@
                             Style="{StaticResource NavigationButton}"
                             Command="{Binding NavigateToRoomListCommand}"/>
                 </WrapPanel>
-
-                <TextBlock Text="Select an option above to get started" 
-                           FontSize="16" 
-                           HorizontalAlignment="Center"
-                           Foreground="#6B7280"
-                           Margin="0,30,0,0"/>
             </StackPanel>
         </Grid>
     </Grid>
