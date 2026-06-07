@@ -47,12 +47,12 @@ It allows receptionists to manage rooms, guests, and reservations efficiently th
 
 ```mermaid
 flowchart TD
-    A([Receptionist opens app]) --> B[Home Page]
-    B --> C{Select Module}
+    A([Receptionist opens app]) --> F[Reservatio Mangment]
+    
 
-    C --> D[Guest Management]
-    C --> E[Room Management]
-    C --> F[Reservation Management]
+    D[Guest Management]
+    E[Room Management]
+    F[Reservation Management]
 
     D --> D1[Add / Edit / Delete Guest]
     D --> D2[Search by Name or Phone]
