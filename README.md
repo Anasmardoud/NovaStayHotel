@@ -116,10 +116,9 @@ Each service was tested for:
 Built with **Telerik WPF controls** for a polished, modern desktop experience.
 
 Four main pages:
-1. **Home Page** — navigation hub and quick overview
-2. **Guest Management Page** — full guest CRUD with search
-3. **Room Management Page** — room listing, filters, and status tracking
-4. **Reservation Management Page** — booking lifecycle management
+1. **Guest Management Page** — full guest CRUD with search
+2. **Room Management Page** — room listing, filters, and status tracking
+3. **Reservation Management Page** — booking lifecycle management
 
 ---
 
